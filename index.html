@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,22 +7,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
+    <div class="container">
+        
+        <header class="cabecalho">
+            <h1 class="nome-site">Alexandria Filmes</h1>
+        </header>
 
-    <h1>Alexandria Filmes</h1>
+        <h2 class="titulo-buscador">Buscador de Filmes</h2>
 
-    </header>
-
-    <main>
-        <div class="container">
-            <h1>Buscador de Filmes</h1>
-            <div class="search-box">
-                <input type="text" id="campoPesquisa" placeholder="Digite o nome do filme...">
-                <button id="botaoPesquisar">Pesquisar</button>
-            </div>
-            <div id="resultadoPesquisa" class="resultado"></div>
+        <div class="search-box">
+            <input type="text" id="campoPesquisa" placeholder="Digite o nome do filme...">
         </div>
-    </main>
+
+        <div id="resultadoPesquisa" class="resultado"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>

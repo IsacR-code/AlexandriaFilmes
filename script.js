@@ -1,36 +1,69 @@
 const campoPesquisa = document.getElementById('campoPesquisa');
-const botaoPesquisar = document.getElementById('botaoPesquisar');
 const resultadoPesquisa = document.getElementById('resultadoPesquisa');
 
-botaoPesquisar.addEventListener('click', function () {
-    const termoPesquisa = campoPesquisa.value;
+// Adiciona um evento de "input" ao campo de pesquisa
+campoPesquisa.addEventListener('input', function () {
+    const termoPesquisa = campoPesquisa.value.trim(); // Remove espaços em branco no início e no fim
 
-    if (termoPesquisa) {
+    if (termoPesquisa.length >= 3) { // Só busca se o usuário digitar pelo menos 3 caracteres
         buscarFilme(termoPesquisa);
     } else {
-        resultadoPesquisa.innerHTML = '<p style="color: red;">Por favor, digite o nome de um filme.</p>';
+        resultadoPesquisa.innerHTML = ''; // Limpa os resultados se o campo estiver vazio ou com menos de 3 caracteres
     }
 });
 
 async function buscarFilme(nomeFilme) {
     const apiKey = 'SUA_CHAVE_DE_API'; // Substitua pela sua chave da OMDb API
-    const url = `https://www.omdbapi.com/?t=${encodeURIComponent(nomeFilme)}&apikey=${apiKey}`;
+    const url = `https://www.omdbapi.com/?s=${encodeURIComponent(nomeFilme)}&apikey=${apiKey}`;
 
     try {
         const resposta = await fetch(url);
         const dados = await resposta.json();
 
         if (dados.Response === 'True') {
-            exibirResultado(dados);
+            exibirResultados(dados.Search); // Exibe a lista de filmes
         } else {
-            resultadoPesquisa.innerHTML = '<p style="color: red;">Filme não encontrado. Tente novamente.</p>';
+            resultadoPesquisa.innerHTML = '<p style="color: red;">Nenhum filme encontrado.</p>';
         }
     } catch (erro) {
-        resultadoPesquisa.innerHTML = '<p style="color: red;">Erro ao buscar o filme. Verifique sua conexão com a internet.</p>';
+        resultadoPesquisa.innerHTML = '<p style="color: red;">Erro ao buscar filmes. Verifique sua conexão com a internet.</p>';
     }
 }
 
-function exibirResultado(filme) {
+function exibirResultados(filmes) {
+    resultadoPesquisa.innerHTML = ''; // Limpa os resultados anteriores
+
+    filmes.forEach(filme => {
+        const filmeHTML = `
+            <div class="filme">
+                <h2>${filme.Title} (${filme.Year})</h2>
+                <img src="${filme.Poster}" alt="${filme.Title}">
+                <button onclick="detalhesFilme('${filme.imdbID}')">Ver Detalhes</button>
+            </div>
+        `;
+        resultadoPesquisa.innerHTML += filmeHTML;
+    });
+}
+
+async function detalhesFilme(imdbID) {
+    const apiKey = ''; // Substitua pela sua chave da OMDb API
+    const url = `https://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`;
+
+    try {
+        const resposta = await fetch(url);
+        const dados = await resposta.json();
+
+        if (dados.Response === 'True') {
+            exibirDetalhes(dados);
+        } else {
+            resultadoPesquisa.innerHTML = '<p style="color: red;">Erro ao carregar detalhes do filme.</p>';
+        }
+    } catch (erro) {
+        resultadoPesquisa.innerHTML = '<p style="color: red;">Erro ao buscar detalhes do filme.</p>';
+    }
+}
+
+function exibirDetalhes(filme) {
     resultadoPesquisa.innerHTML = `
         <h2>${filme.Title} (${filme.Year})</h2>
         <img src="${filme.Poster}" alt="${filme.Title}">
@@ -39,5 +72,11 @@ function exibirResultado(filme) {
         <p><strong>Gênero:</strong> ${filme.Genre}</p>
         <p><strong>Sinopse:</strong> ${filme.Plot}</p>
         <p><strong>Avaliação IMDb:</strong> ${filme.imdbRating}</p>
+        <button onclick="voltarParaResultados()">Voltar</button>
     `;
+}
+
+function voltarParaResultados() {
+    const termoPesquisa = campoPesquisa.value.trim();
+    buscarFilme(termoPesquisa); // Volta para a lista de resultados
 }
