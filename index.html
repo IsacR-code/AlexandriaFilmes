@@ -8,9 +8,11 @@
 </head>
 <body>
     <div class="container">
-        
         <header class="cabecalho">
-            <h1 class="nome-site">Alexandria Filmes</h1>
+            <h1 class="nome-site">ALEXANDRIA FILMES</h1>
+            <button id="btn-wishlist" class="botao-wishlist">
+                Minha Lista ★
+            </button>
         </header>
 
         <h2 class="titulo-buscador">Buscador de Filmes</h2>
@@ -20,6 +22,16 @@
         </div>
 
         <div id="resultadoPesquisa" class="resultado"></div>
+
+        <!-- Aba lateral da Wishlist -->
+        <div id="wishlist-sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h3>Minha Wishlist</h3>
+                <button class="fechar-sidebar">&times;</button>
+            </div>
+            <div id="conteudo-wishlist" class="conteudo-wishlist"></div>
+        </div>
+        <div id="overlay" class="overlay"></div>
     </div>
 
     <script src="script.js"></script>

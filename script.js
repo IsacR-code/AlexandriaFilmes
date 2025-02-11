@@ -80,3 +80,54 @@ function voltarParaResultados() {
     const termoPesquisa = campoPesquisa.value.trim();
     buscarFilme(termoPesquisa); // Volta para a lista de resultados
 }
+
+function exibirResultados(filmes) {
+    resultadoPesquisa.innerHTML = filmes.map(filme => `
+        <div class="filme">
+            <h3>${filme.Title} (${filme.Year})</h3>
+            <img src="${filme.Poster}" alt="${filme.Title}">
+            <button onclick="adicionarWishlist('${filme.imdbID}', '${filme.Title}', '${filme.Year}', '${filme.Poster}')">
+                Adicionar à Wishlist
+            </button>
+        </div>
+    `).join('');
+}
+
+// Elementos da Wishlist
+const btnWishlist = document.getElementById('btn-wishlist');
+const sidebar = document.getElementById('wishlist-sidebar');
+const overlay = document.getElementById('overlay');
+const fecharSidebar = document.querySelector('.fechar-sidebar');
+
+// Controle da Sidebar
+function toggleWishlist() {
+    sidebar.classList.toggle('ativa');
+    overlay.classList.toggle('ativa');
+}
+
+btnWishlist.addEventListener('click', toggleWishlist);
+fecharSidebar.addEventListener('click', toggleWishlist);
+overlay.addEventListener('click', toggleWishlist);
+
+// Fechar com ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar.classList.contains('ativa')) {
+        toggleWishlist();
+    }
+});
+
+// Função para exibir wishlist (mantenha sua função existente)
+function exibirWishlist() {
+    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const conteudoWishlist = document.getElementById('conteudo-wishlist');
+    
+    conteudoWishlist.innerHTML = wishlist.map(filme => `
+        <div class="item-wishlist">
+            <img src="${filme.poster}" alt="${filme.titulo}" class="poster-miniatura">
+            <div class="info-wishlist">
+                <h4>${filme.titulo} (${filme.ano})</h4>
+                <button onclick="removerWishlist('${filme.imdbID}')">Remover</button>
+            </div>
+        </div>
+    `).join('');
+}
